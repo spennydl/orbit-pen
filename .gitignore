@@ -1,0 +1,8 @@
+/target
+**/*.rs.bk
+Cargo.lock
+bin/
+# we want to serve compiled wasm to codepen, so include pkg
+# pkg/
+wasm-pack.log
+www/
