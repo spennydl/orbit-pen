@@ -2,7 +2,7 @@ use std::vec::Vec;
 use std::cell::RefCell;
 use std::rc::Rc;
 
-use crate::constants::{SCALE, TIMESTEP, G};
+use crate::constants::{TIMESTEP, G};
 
 use na::{Point2, Vector2};
 
@@ -84,11 +84,10 @@ impl System {
             let final_force = self.bodies.borrow()
                 .iter().enumerate()
                 .filter(|(i, _)| *i != idx)
-                .fold(Vector2::zeros(), |acc, (i, other)| {
+                .fold(Vector2::zeros(), |acc, (_, other)| {
                     let distance = na::distance(&body.position, &other.position);
                     let force = G * (body.mass * other.mass) / distance.powf(2.0);
 
-                    // get the angle here
                     let v = other.position - body.position;
                     let mut dir = Vector2::new(v.x, v.y).normalize();
                     dir *= force;

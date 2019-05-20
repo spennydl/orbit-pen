@@ -12,7 +12,7 @@ use std::rc::Rc;
 use wasm_bindgen::prelude::*;
 use wasm_bindgen::JsCast;
 
-use system::{Body, System};
+use system::System;
 
 // When the `wee_alloc` feature is enabled, use `wee_alloc` as the global
 // allocator.
@@ -39,6 +39,8 @@ pub struct Simulation {
 #[wasm_bindgen]
 impl Simulation {
     pub fn new() -> Simulation {
+        utils::set_panic_hook();
+
         let document = web_sys::window()
             .expect("there should be a window")
             .document()
@@ -68,13 +70,12 @@ impl Simulation {
             .dyn_into::<web_sys::CanvasRenderingContext2d>()
             .unwrap();
 
-        let earth_handle = self.sys.add_body()
+        let _earth_handle = self.sys.add_body()
             .with_mass(5.9722 * (10.0 as f64).powf(24.0))
             .with_radius(50.0)
             .commit();
 
-        // moon
-        let moon_handle = self.sys.add_body()
+        let _moon_handle = self.sys.add_body()
             .with_mass(7.348 * (1.0 as f64).powf(23.0))
             .with_radius(14.0)
             .with_position(Point2::new(-1.0 * constants::UNIT, 0.0))
