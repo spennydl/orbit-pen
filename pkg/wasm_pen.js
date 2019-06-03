@@ -1,60 +1,5 @@
 import * as wasm from './wasm_pen_bg';
 
-const heap = new Array(32);
-
-heap.fill(undefined);
-
-heap.push(undefined, null, true, false);
-
-function getObject(idx) { return heap[idx]; }
-
-export function __widl_instanceof_CanvasRenderingContext2D(idx) { return getObject(idx) instanceof CanvasRenderingContext2D ? 1 : 0; }
-
-export function __widl_f_begin_path_CanvasRenderingContext2D(arg0) {
-    getObject(arg0).beginPath();
-}
-
-export function __widl_f_stroke_CanvasRenderingContext2D(arg0) {
-    getObject(arg0).stroke();
-}
-
-let cachegetUint32Memory = null;
-function getUint32Memory() {
-    if (cachegetUint32Memory === null || cachegetUint32Memory.buffer !== wasm.memory.buffer) {
-        cachegetUint32Memory = new Uint32Array(wasm.memory.buffer);
-    }
-    return cachegetUint32Memory;
-}
-
-let heap_next = heap.length;
-
-function addHeapObject(obj) {
-    if (heap_next === heap.length) heap.push(heap.length + 1);
-    const idx = heap_next;
-    heap_next = heap[idx];
-
-    heap[idx] = obj;
-    return idx;
-}
-
-function handleError(exnptr, e) {
-    const view = getUint32Memory();
-    view[exnptr / 4] = 1;
-    view[exnptr / 4 + 1] = addHeapObject(e);
-}
-
-export function __widl_f_arc_CanvasRenderingContext2D(arg0, arg1, arg2, arg3, arg4, arg5, exnptr) {
-    try {
-        getObject(arg0).arc(arg1, arg2, arg3, arg4, arg5);
-    } catch (e) {
-        handleError(exnptr, e);
-    }
-}
-
-export function __widl_f_clear_rect_CanvasRenderingContext2D(arg0, arg1, arg2, arg3, arg4) {
-    getObject(arg0).clearRect(arg1, arg2, arg3, arg4);
-}
-
 let cachedTextDecoder = new TextDecoder('utf-8');
 
 let cachegetUint8Memory = null;
@@ -69,61 +14,37 @@ function getStringFromWasm(ptr, len) {
     return cachedTextDecoder.decode(getUint8Memory().subarray(ptr, ptr + len));
 }
 
-function isLikeNone(x) {
-    return x === undefined || x === null;
-}
-
-export function __widl_f_get_element_by_id_Document(arg0, arg1, arg2) {
-    let varg1 = getStringFromWasm(arg1, arg2);
-
-    const val = getObject(arg0).getElementById(varg1);
-    return isLikeNone(val) ? 0 : addHeapObject(val);
-
-}
-
-export function __widl_instanceof_HTMLCanvasElement(idx) { return getObject(idx) instanceof HTMLCanvasElement ? 1 : 0; }
-
-export function __widl_f_get_context_HTMLCanvasElement(arg0, arg1, arg2, exnptr) {
-    let varg1 = getStringFromWasm(arg1, arg2);
-    try {
-
-        const val = getObject(arg0).getContext(varg1);
-        return isLikeNone(val) ? 0 : addHeapObject(val);
-
-    } catch (e) {
-        handleError(exnptr, e);
-    }
-}
-
-export function __widl_instanceof_Window(idx) { return getObject(idx) instanceof Window ? 1 : 0; }
-
-export function __widl_f_request_animation_frame_Window(arg0, arg1, exnptr) {
-    try {
-        return getObject(arg0).requestAnimationFrame(getObject(arg1));
-    } catch (e) {
-        handleError(exnptr, e);
-    }
-}
-
-export function __widl_f_document_Window(arg0) {
-
-    const val = getObject(arg0).document;
-    return isLikeNone(val) ? 0 : addHeapObject(val);
-
-}
-
-export function __wbg_newnoargs_cfdef9286cf1c39a(arg0, arg1) {
+export function __wbg_error_4bb6c2a97407129a(arg0, arg1) {
     let varg0 = getStringFromWasm(arg0, arg1);
-    return addHeapObject(new Function(varg0));
+
+    varg0 = varg0.slice();
+    wasm.__wbindgen_free(arg0, arg1 * 1);
+
+    console.error(varg0);
 }
 
-export function __wbg_call_8ff1b6c7fba4f641(arg0, arg1, exnptr) {
-    try {
-        return addHeapObject(getObject(arg0).call(getObject(arg1)));
-    } catch (e) {
-        handleError(exnptr, e);
-    }
+const heap = new Array(32);
+
+heap.fill(undefined);
+
+heap.push(undefined, null, true, false);
+
+let heap_next = heap.length;
+
+function addHeapObject(obj) {
+    if (heap_next === heap.length) heap.push(heap.length + 1);
+    const idx = heap_next;
+    heap_next = heap[idx];
+
+    heap[idx] = obj;
+    return idx;
 }
+
+export function __wbg_new_59cb74e423758ede() {
+    return addHeapObject(new Error());
+}
+
+function getObject(idx) { return heap[idx]; }
 
 let WASM_VECTOR_LEN = 0;
 
@@ -183,6 +104,114 @@ if (typeof cachedTextEncoder.encodeInto === 'function') {
         return ptr;
     };
 }
+
+let cachegetUint32Memory = null;
+function getUint32Memory() {
+    if (cachegetUint32Memory === null || cachegetUint32Memory.buffer !== wasm.memory.buffer) {
+        cachegetUint32Memory = new Uint32Array(wasm.memory.buffer);
+    }
+    return cachegetUint32Memory;
+}
+
+export function __wbg_stack_558ba5917b466edd(ret, arg0) {
+
+    const retptr = passStringToWasm(getObject(arg0).stack);
+    const retlen = WASM_VECTOR_LEN;
+    const mem = getUint32Memory();
+    mem[ret / 4] = retptr;
+    mem[ret / 4 + 1] = retlen;
+
+}
+
+export function __widl_instanceof_CanvasRenderingContext2D(idx) { return getObject(idx) instanceof CanvasRenderingContext2D ? 1 : 0; }
+
+export function __widl_f_begin_path_CanvasRenderingContext2D(arg0) {
+    getObject(arg0).beginPath();
+}
+
+export function __widl_f_fill_CanvasRenderingContext2D(arg0) {
+    getObject(arg0).fill();
+}
+
+export function __widl_f_set_fill_style_CanvasRenderingContext2D(arg0, arg1) {
+    getObject(arg0).fillStyle = getObject(arg1);
+}
+
+function handleError(exnptr, e) {
+    const view = getUint32Memory();
+    view[exnptr / 4] = 1;
+    view[exnptr / 4 + 1] = addHeapObject(e);
+}
+
+export function __widl_f_arc_CanvasRenderingContext2D(arg0, arg1, arg2, arg3, arg4, arg5, exnptr) {
+    try {
+        getObject(arg0).arc(arg1, arg2, arg3, arg4, arg5);
+    } catch (e) {
+        handleError(exnptr, e);
+    }
+}
+
+export function __widl_f_fill_rect_CanvasRenderingContext2D(arg0, arg1, arg2, arg3, arg4) {
+    getObject(arg0).fillRect(arg1, arg2, arg3, arg4);
+}
+
+function isLikeNone(x) {
+    return x === undefined || x === null;
+}
+
+export function __widl_f_get_element_by_id_Document(arg0, arg1, arg2) {
+    let varg1 = getStringFromWasm(arg1, arg2);
+
+    const val = getObject(arg0).getElementById(varg1);
+    return isLikeNone(val) ? 0 : addHeapObject(val);
+
+}
+
+export function __widl_instanceof_HTMLCanvasElement(idx) { return getObject(idx) instanceof HTMLCanvasElement ? 1 : 0; }
+
+export function __widl_f_get_context_HTMLCanvasElement(arg0, arg1, arg2, exnptr) {
+    let varg1 = getStringFromWasm(arg1, arg2);
+    try {
+
+        const val = getObject(arg0).getContext(varg1);
+        return isLikeNone(val) ? 0 : addHeapObject(val);
+
+    } catch (e) {
+        handleError(exnptr, e);
+    }
+}
+
+export function __widl_instanceof_Window(idx) { return getObject(idx) instanceof Window ? 1 : 0; }
+
+export function __widl_f_request_animation_frame_Window(arg0, arg1, exnptr) {
+    try {
+        return getObject(arg0).requestAnimationFrame(getObject(arg1));
+    } catch (e) {
+        handleError(exnptr, e);
+    }
+}
+
+export function __widl_f_document_Window(arg0) {
+
+    const val = getObject(arg0).document;
+    return isLikeNone(val) ? 0 : addHeapObject(val);
+
+}
+
+export function __wbg_newnoargs_cfdef9286cf1c39a(arg0, arg1) {
+    let varg0 = getStringFromWasm(arg0, arg1);
+    return addHeapObject(new Function(varg0));
+}
+
+export function __wbg_call_8ff1b6c7fba4f641(arg0, arg1, exnptr) {
+    try {
+        return addHeapObject(getObject(arg0).call(getObject(arg1)));
+    } catch (e) {
+        handleError(exnptr, e);
+    }
+}
+
+export function __wbindgen_string_new(p, l) { return addHeapObject(getStringFromWasm(p, l)); }
 
 export function __wbindgen_debug_string(i, len_ptr) {
     const debug_str =
@@ -285,7 +314,7 @@ export function __wbindgen_throw(ptr, len) {
     throw new Error(getStringFromWasm(ptr, len));
 }
 
-export function __wbindgen_closure_wrapper59(a, b, _ignored) {
+export function __wbindgen_closure_wrapper74(a, b, _ignored) {
     const f = wasm.__wbg_function_table.get(7);
     const d = wasm.__wbg_function_table.get(8);
     const cb = function() {
@@ -335,6 +364,18 @@ export class Simulation {
     */
     static new() {
         return Simulation.__wrap(wasm.simulation_new());
+    }
+    /**
+    * @param {number} mass
+    * @param {number} radius
+    * @param {number} x
+    * @param {number} y
+    * @param {number} vx
+    * @param {number} vy
+    * @returns {number}
+    */
+    add_body(mass, radius, x, y, vx, vy) {
+        return wasm.simulation_add_body(this.ptr, mass, radius, x, y, vx, vy);
     }
     /**
     * @returns {void}

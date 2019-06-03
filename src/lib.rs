@@ -50,12 +50,22 @@ impl Simulation {
             .expect("the canvas should exist");
         let canvas: web_sys::HtmlCanvasElement = canvas
             .dyn_into::<web_sys::HtmlCanvasElement>()
-            .map_err(|_| ())
             .unwrap();
 
         let sys = System::new();
 
         Simulation { canvas, sys }
+    }
+
+    pub fn add_body(&self, mass: f64, radius: f64, 
+                        x: f64, y: f64,
+                        vx: f64, vy: f64) -> f64 {
+        self.sys.add_body()
+            .with_mass(mass)
+            .with_radius(radius)
+            .with_position(Point2::new(x * constants::UNIT, y * constants::UNIT))
+            .with_velocity(Vector2::new(vx, vy))
+            .commit() as f64
     }
 
     pub fn start(self) -> Result<(), JsValue> {
@@ -70,23 +80,17 @@ impl Simulation {
             .dyn_into::<web_sys::CanvasRenderingContext2d>()
             .unwrap();
 
-        let _earth_handle = self.sys.add_body()
-            .with_mass(5.9722 * (10.0 as f64).powf(24.0))
-            .with_radius(50.0)
-            .commit();
-
-        let _moon_handle = self.sys.add_body()
-            .with_mass(7.348 * (1.0 as f64).powf(23.0))
-            .with_radius(14.0)
-            .with_position(Point2::new(-1.0 * constants::UNIT, 0.0))
-            .with_velocity(Vector2::new(0.0, 1022.0))
-            .commit();
-
-        let center = Vector2::new(350.0, 200.0);
+        let center = Vector2::new(1280.0 / 2.0, 720.0 / 2.0);
         *g.borrow_mut() = Some(Closure::wrap(Box::new(move || {
             self.sys.tick();
 
-            ctx.clear_rect(0.0, 0.0, 700.0, 500.0);
+            let black = JsValue::from_str("#000000");
+            let body_color = JsValue::from_str("#EAEAEA");
+
+            ctx.set_fill_style(&black);
+            ctx.fill_rect(0.0, 0.0, 1280.0, 720.0);
+
+            ctx.set_fill_style(&body_color);
             for body in self.sys.bodies().borrow().iter() {
                 ctx.begin_path();
                 ctx.arc(
@@ -97,7 +101,7 @@ impl Simulation {
                     2.0 * constants::PI,
                 )
                 .unwrap();
-                ctx.stroke();
+                ctx.fill();
             }
             // Schedule ourself for another requestAnimationFrame callback.
             request_animation_frame(f.borrow().as_ref().unwrap());

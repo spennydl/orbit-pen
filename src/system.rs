@@ -10,7 +10,7 @@ pub struct Body {
     pub mass: f64, // kilograms
     pub radius: f64, // pixels (int?)
     pub position: Point2<f64>, // position over 0..SCALE
-    pub velocity: Vector2<f64>, // 
+    pub velocity: Vector2<f64>, // m/s
 }
 
 impl Body {
